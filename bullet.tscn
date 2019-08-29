@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://bullet.gd" type="Script" id=1]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 4, 8 )
+
+[sub_resource type="OccluderPolygon2D" id=2]
+polygon = PoolVector2Array( -4, -16, -4, 0, 4, 0, 4, -16 )
+
+[node name="bullet" type="RigidBody2D"]
+position = Vector2( 624, -20 )
+mass = 50.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="bullet_shape" type="Polygon2D" parent="."]
+position = Vector2( -90, 860 )
+scale = Vector2( 1, 1.5 )
+color = Color( 0, 0, 0, 1 )
+polygon = PoolVector2Array( 86, -584, 86, -573.333, 90, -568, 94, -573.333, 94, -584 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -8 )
+shape = SubResource( 1 )
+
+[node name="Visibility" type="VisibilityNotifier2D" parent="."]
+position = Vector2( 6.19888e-006, -4 )
+scale = Vector2( 0.400001, 1.2 )
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource( 2 )
+[connection signal="screen_exited" from="Visibility" to="." method="_on_Visibility_screen_exited"]

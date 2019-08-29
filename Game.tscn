@@ -1,0 +1,128 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Game.gd" type="Script" id=1]
+[ext_resource path="res://bullet.tscn" type="PackedScene" id=2]
+[ext_resource path="res://KinematicBody2D.gd" type="Script" id=3]
+[ext_resource path="res://enemy.gd" type="Script" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 8, 8 )
+
+[sub_resource type="Curve" id=3]
+_data = [ Vector2( 0, 0 ), 0.0, 2.69047, 0, 0, Vector2( 0.507253, 0.7288 ), -0.101107, -0.101107, 0, 0, Vector2( 1, 0.0072 ), -2.53843, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=4]
+curve = SubResource( 3 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 8, 8 )
+
+[sub_resource type="OccluderPolygon2D" id=5]
+polygon = PoolVector2Array( -8, -8, -8, 8, 8, 8, 8, -8 )
+
+[sub_resource type="OccluderPolygon2D" id=6]
+polygon = PoolVector2Array( -8, -8, -8, 8, 8, 8, 8, -8 )
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 1 )
+bullet = ExtResource( 2 )
+
+[node name="player" type="KinematicBody2D" parent="."]
+position = Vector2( 492, 234 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="player_collision" type="CollisionShape2D" parent="player"]
+shape = SubResource( 1 )
+
+[node name="player body" type="Node2D" parent="player"]
+
+[node name="player_left_shape" type="Polygon2D" parent="player/player body"]
+scale = Vector2( 1, 1.02563 )
+color = Color( 0.87451, 0.603922, 0.133333, 1 )
+polygon = PoolVector2Array( -8, -7.80008, -8, 7.80009, 8, 7.80009, 8, 0, 16, 0, 16, -7.80008 )
+
+[node name="gun_fire_left_shape" type="Polygon2D" parent="player/player body"]
+visible = false
+scale = Vector2( 1, 1 )
+polygon = PoolVector2Array( 36, -6, 36, -2, 32, -2, 32, 2, 30, 2, 30, -2, 16, -2, 16, -6, 30, -6, 30, -10, 32, -10, 32, -6 )
+
+[node name="Timer_left" type="Timer" parent="player/player body/gun_fire_left_shape"]
+wait_time = 0.05
+one_shot = true
+
+[node name="player_right_shape" type="Polygon2D" parent="player/player body"]
+visible = false
+scale = Vector2( 1, 1.02563 )
+color = Color( 0.87451, 0.603922, 0.133333, 1 )
+polygon = PoolVector2Array( -8, -7.80008, -8, 7.80009, 8, 7.80008, 16, 7.80008, 16, 0, 8, 0, 8, -7.80009 )
+
+[node name="gun_fire_right_shape" type="Polygon2D" parent="player/player body"]
+visible = false
+scale = Vector2( 1, 1 )
+polygon = PoolVector2Array( 36, 2, 36, 6, 32, 6, 32, 10, 30, 10, 30, 6, 16, 6, 16, 2, 30, 2, 30, -2, 32, -2, 32, 2 )
+
+[node name="Timer_right" type="Timer" parent="player/player body/gun_fire_right_shape"]
+wait_time = 0.05
+one_shot = true
+
+[node name="Light2D" type="Light2D" parent="player"]
+scale = Vector2( 1.58398, 2142 )
+z_index = -1
+texture = SubResource( 4 )
+shadow_enabled = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+current = true
+
+[node name="bullet" parent="." instance=ExtResource( 2 )]
+gravity_scale = 2.0
+
+[node name="bullet_timer" type="Timer" parent="."]
+autostart = true
+
+[node name="enemy_y" type="KinematicBody2D" parent="."]
+position = Vector2( 584, 246 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="enemy_collision" type="CollisionShape2D" parent="enemy_y"]
+shape = SubResource( 2 )
+
+[node name="enemy_shape" type="Polygon2D" parent="enemy_y"]
+color = Color( 0.815686, 0, 0, 1 )
+polygon = PoolVector2Array( -8, -8, 8, -8, 8, 8, -8, 8, -8, -8 )
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="enemy_y"]
+occluder = SubResource( 5 )
+
+[node name="enemy_x" type="KinematicBody2D" parent="."]
+position = Vector2( 422, 38 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="enemy_collision" type="CollisionShape2D" parent="enemy_x"]
+shape = SubResource( 2 )
+
+[node name="enemy_shape" type="Polygon2D" parent="enemy_x"]
+color = Color( 0.815686, 0, 0, 1 )
+polygon = PoolVector2Array( -8, -8, 8, -8, 8, 8, -8, 8, -8, -8 )
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="enemy_x"]
+occluder = SubResource( 6 )
+
+[node name="background" type="Polygon2D" parent="."]
+position = Vector2( 492, 234 )
+z_index = -1
+color = Color( 0.129412, 0.129412, 0.129412, 1 )
+polygon = PoolVector2Array( 556, -254, -510, -256, -502, 378, 556, 386 )
+[connection signal="timeout" from="player/player body/gun_fire_left_shape/Timer_left" to="player" method="_on_Timer_left_timeout"]
+[connection signal="timeout" from="player/player body/gun_fire_right_shape/Timer_right" to="player" method="_on_Timer_right_timeout"]
+[connection signal="timeout" from="bullet_timer" to="." method="_on_bullet_timer_timeout"]
